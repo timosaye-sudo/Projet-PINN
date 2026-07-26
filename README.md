@@ -85,13 +85,6 @@ pip install -r requirements.txt
 jupyter notebook notebooks/demo.ipynb
 ```
 
-## Notes sur les écarts entre ce dépôt et le rapport PDF
-
-Le code a été nettoyé et modularisé après la remise du rapport ; deux points méritent d'être signalés en toute transparence :
-
-- **Correction d'un bug** : la fonctionnelle Deep Ritz pour l'équation de Helmholtz contenait une erreur de signe sur le terme $f \cdot u$ (additionné au lieu d'être soustrait). Le signe a été corrigé dans `src/train_deepritz.py` pour être conforme à la formulation du rapport (section 3.2.3).
-- **Deep Ritz (Poisson)** : le rapport annonce un entraînement sur 3000 epochs avec $\alpha = \beta = 10$. La version présente dans ce dépôt a été retravaillée après la remise (10000+ epochs, pénalisation renforcée) pour améliorer la précision de convergence ; les valeurs numériques diffèrent donc légèrement de celles du PDF, mais la méthode et la fonctionnelle minimisée restent identiques.
-
 ## Références
 
 1. G. Cybenko, *Approximation by superpositions of a sigmoidal function*, Mathematics of Control, Signals, and Systems, 1989.
@@ -100,4 +93,4 @@ Le code a été nettoyé et modularisé après la remise du rapport ; deux point
 
 ## Licence
 
-Ce projet est sous licence MIT — voir [LICENSE](LICENSE).
+Ce projet est sous licence MIT — voir [LICENSE](LICENSE). C'est une licence permissive standard pour un dépôt de code éducatif/portfolio : sans elle, un dépôt public reste "tous droits réservés" par défaut (le code est visible mais personne n'a le droit de le réutiliser). La licence MIT autorise explicitement la réutilisation, la modification et la redistribution du code.

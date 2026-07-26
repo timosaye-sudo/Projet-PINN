@@ -6,6 +6,16 @@ La fonction de perte intègre directement le résidu de l'EDP (formulation
 forte) et une pénalisation des conditions aux limites :
 
     E(u) = mean[(u''(x_i) + f(x_i))^2] + u(0)^2 + u(1)^2
+
+NOTE DE CORRECTION (par rapport au notebook original) :
+Le code initial calculait le résidu comme (u''(x_i) - f(x_i))^2, ce qui
+imposait en réalité u''=f au lieu de -u''=f. Cette erreur était "masquée"
+car la fonction `solution_poisson` utilisée pour comparer contenait elle
+aussi un signe inversé, cohérent avec cette équation erronée — d'où une
+convergence visuellement satisfaisante mais vers la mauvaise équation.
+Les deux signes ont été corrigés conjointement (voir `problems.py`) pour
+être conformes à l'équation annoncée dans le rapport (-u''=f) et à sa
+solution exacte donnée en section 4.1 : u*(x) = sin(2*pi*x)/(4*pi^2).
 """
 
 import numpy as np
@@ -41,7 +51,8 @@ def train_pinn(net, epochs: int = 1000, n: int = 1000, lr: float = 0.01, silent:
     for epoch in range(epochs):
         f_xx_grid = vmap(f_forward_xx, in_dims=(0, None, None, None))(grid, net, params, buffers)
 
-        loss = ((f_xx_grid - f_grid) ** 2).mean()
+        # Résidu de -u''(x) = f(x), soit u''(x) + f(x) = 0
+        loss = ((f_xx_grid + f_grid) ** 2).mean()
         loss += f_forward(bc_0, net, params, buffers) ** 2
         loss += f_forward(bc_1, net, params, buffers) ** 2
         losses[epoch] = loss.item()
@@ -102,7 +113,8 @@ def train_pinn_with_validation(
 
     for epoch in range(epochs):
         f_xx_train = vmap(f_forward_xx, in_dims=(0, None, None, None))(grid_train, net, params, buffers)
-        train_loss = ((f_xx_train - f_train) ** 2).mean()
+        # Résidu de -u''(x) = f(x), soit u''(x) + f(x) = 0
+        train_loss = ((f_xx_train + f_train) ** 2).mean()
         train_loss += f_forward(bc_0, net, params, buffers) ** 2
         train_loss += f_forward(bc_1, net, params, buffers) ** 2
 
@@ -112,7 +124,7 @@ def train_pinn_with_validation(
 
         with torch.no_grad():
             f_xx_val = vmap(f_forward_xx, in_dims=(0, None, None, None))(grid_val, net, params, buffers)
-            val_loss = ((f_xx_val - f_val) ** 2).mean()
+            val_loss = ((f_xx_val + f_val) ** 2).mean()
             val_loss += f_forward(bc_0, net, params, buffers) ** 2
             val_loss += f_forward(bc_1, net, params, buffers) ** 2
 
