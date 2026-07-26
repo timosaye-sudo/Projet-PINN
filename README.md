@@ -93,4 +93,4 @@ jupyter notebook notebooks/demo.ipynb
 
 ## Licence
 
-Ce projet est sous licence MIT — voir [LICENSE](LICENSE). C'est une licence permissive standard pour un dépôt de code éducatif/portfolio : sans elle, un dépôt public reste "tous droits réservés" par défaut (le code est visible mais personne n'a le droit de le réutiliser). La licence MIT autorise explicitement la réutilisation, la modification et la redistribution du code.
+Ce projet est sous licence MIT — voir [LICENSE](LICENSE).
