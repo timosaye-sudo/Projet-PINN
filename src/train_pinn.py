@@ -2,20 +2,10 @@
 Entraînement de réseaux PINN (Physics-Informed Neural Networks) pour
 l'équation de Poisson -u''(x) = f(x), u(0) = u(1) = 0.
 
-La fonction de perte intègre directement le résidu de l'EDP (formulation
-forte) et une pénalisation des conditions aux limites :
+La fonction de perte intègre directement le résidu de l'EDP et une pénalisation des conditions aux limites :
 
     E(u) = mean[(u''(x_i) + f(x_i))^2] + u(0)^2 + u(1)^2
 
-NOTE DE CORRECTION (par rapport au notebook original) :
-Le code initial calculait le résidu comme (u''(x_i) - f(x_i))^2, ce qui
-imposait en réalité u''=f au lieu de -u''=f. Cette erreur était "masquée"
-car la fonction `solution_poisson` utilisée pour comparer contenait elle
-aussi un signe inversé, cohérent avec cette équation erronée — d'où une
-convergence visuellement satisfaisante mais vers la mauvaise équation.
-Les deux signes ont été corrigés conjointement (voir `problems.py`) pour
-être conformes à l'équation annoncée dans le rapport (-u''=f) et à sa
-solution exacte donnée en section 4.1 : u*(x) = sin(2*pi*x)/(4*pi^2).
 """
 
 import numpy as np
@@ -27,13 +17,6 @@ from .problems import f, solution_poisson
 
 
 def train_pinn(net, epochs: int = 1000, n: int = 1000, lr: float = 0.01, silent: bool = True):
-    """
-    Entraîne un réseau PINN de base (sans jeu de validation) sur l'équation
-    de Poisson. Correspond à la section 4.1 du rapport (premier test PINN).
-
-    Retourne l'historique des pertes et la norme L2 finale par rapport à la
-    solution exacte.
-    """
     losses = np.zeros(epochs)
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     params = dict(net.named_parameters())
@@ -90,12 +73,6 @@ def train_pinn_with_validation(
     lr: float = 0.01,
     silent: bool = True,
 ):
-    """
-    Entraîne un réseau PINN avec un jeu de validation, et conserve les
-    meilleurs paramètres rencontrés (early-stopping implicite).
-    Correspond aux sections 4.2 et 4.3 du rapport (étude des
-    hyperparamètres et de la profondeur du réseau).
-    """
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
     params = dict(net.named_parameters())
     buffers = dict(net.named_buffers())

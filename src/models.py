@@ -1,11 +1,9 @@
 """
-Architectures de réseaux de neurones utilisées pour approximer la solution
-des EDP.
+Deux types de réseaux de neuronnes : 
 
-- SNN : réseau à une seule couche cachée (Shallow Neural Network), tel
-  qu'utilisé par le théorème d'approximation universelle de Cybenko (1989).
-- DeepNN : réseau multi-couches, utilisé pour étudier l'effet de la
-  profondeur sur la précision (cf. rapport, section 4.3).
+    - SNN : réseau à une seule couche cachée (Shallow Neural Network), tel
+    qu'utilisé par le théorème d'approximation universelle de Cybenko (1989).
+    - DeepNN : réseau multi-couches?
 """
 
 import torch

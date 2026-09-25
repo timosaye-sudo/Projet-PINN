@@ -1,28 +1,10 @@
 """
-Entraînement par la méthode Deep Ritz (E & Yu, 2017), qui minimise une
-fonctionnelle d'énergie issue de la formulation variationnelle (faible) de
-l'EDP, plutôt que le résidu de la formulation forte comme dans PINN.
-
 Deux problèmes sont traités :
 
 - `train_deepritz_poisson` : équation de Poisson, J(u) = 1/2 int|u'|^2 - fu
 - `train_deepritz_helmholtz` : équation de Helmholtz modifiée (lambda=1),
   J(u) = 1/2 int|u'|^2 + 1/2 int|u|^2 - fu
 
-NOTE DE CORRECTION (par rapport au notebook original) :
-La version initiale de `train_deepritz_helmholtz` contenait une erreur de
-signe : le terme linéaire f*u était additionné à la perte au lieu d'être
-soustrait, ce qui ne correspondait pas à la fonctionnelle du rapport
-(section 3.2.3). Le signe a été corrigé ci-dessous.
-
-NOTE SUR LES HYPERPARAMÈTRES (Poisson) :
-Le rapport annonce un entraînement sur 3000 epochs avec des coefficients de
-pénalisation alpha = beta = 10 (section 4.5.1). La version ci-dessous a été
-retravaillée après la remise du rapport (10001 epochs, lr=0.0005,
-pénalisation renforcée à 500) pour améliorer la précision de convergence.
-Les valeurs numériques obtenues diffèrent donc légèrement de celles
-affichées dans le rapport PDF, mais la méthode et la fonctionnelle
-minimisée restent identiques.
 """
 
 import torch
@@ -105,8 +87,6 @@ def train_deepritz_helmholtz(
     J(u) = 1/2 * int(u'(x)^2) dx + 1/2 * int(u(x)^2) dx - int(f(x) u(x)) dx
     (+ pénalisation aux bords, coefficients alpha et beta)
 
-    Le signe du terme f*u a été corrigé par rapport au notebook original
-    (voir note de correction en tête de fichier).
     """
     grid = torch.linspace(0, 1, n_train)
     f_grid = vmap(f, in_dims=(0,))(grid)
